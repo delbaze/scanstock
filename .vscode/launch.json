@@ -1,0 +1,15 @@
+{
+    "configurations": [
+        {
+            
+            "name": "Attach to hermes",
+            "bundlerPort": "8081",
+            "bundlerHost": "127.0.0.1",
+            "request": "attach",
+            
+            "type": "expo",
+            "projectRoot": "${workspaceFolder}"
+        }
+    ],
+    "version": "0.2.0"
+}

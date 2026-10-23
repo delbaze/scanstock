@@ -1,18 +1,44 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useColorScheme } from 'react-native';
+import {
+  defaultRepositories,
+  RepositoriesProvider,
+} from "@/ui/providers/RepositoriesProvider";
+import {
+  onAppStateChange,
+  PERSIST_MAX_AGE,
+  persister,
+  queryClient,
+  registerMutationDefaults,
+} from "@/ui/queryClient";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { Stack } from "expo-router";
+import { useEffect } from "react";
+import { AppState } from "react-native";
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+registerMutationDefaults(queryClient, defaultRepositories.products);
 
-SplashScreen.preventAutoHideAsync();
+useEffect(() => {
+  const subscription = AppState.addEventListener("change", onAppStateChange);
+  return () => subscription.remove();
+}, []);
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+export default function RootLayout() {
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
-    </ThemeProvider>
+    <RepositoriesProvider>
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={{ persister, maxAge: PERSIST_MAX_AGE }}
+        onSuccess={() => {
+          queryClient.resumePausedMutations();
+        }}
+      >
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="product/[id]"
+            options={{ title: "Fiche produit" }}
+          />
+        </Stack>
+      </PersistQueryClientProvider>
+    </RepositoriesProvider>
   );
 }

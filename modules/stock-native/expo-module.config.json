@@ -1,0 +1,9 @@
+{
+  "platforms": ["apple", "android", "web"],
+  "apple": {
+    "modules": ["StockNativeModuleModule"]
+  },
+  "android": {
+    "modules": ["com.stackstock.app.StockNativeModuleModule"]
+  }
+}

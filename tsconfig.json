@@ -8,7 +8,9 @@
       ],
       "@/assets/*": [
         "./assets/*"
-      ]
+      ],
+      "@/modules/*": ["./modules/*"],
+      "@/test/*": ["./test/*"],
     }
   },
   "include": [
